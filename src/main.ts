@@ -7,17 +7,19 @@ export type Pair = [string, string];
 type HistoryState = Record<string, Pair[]>
 interface Input {
     names: string[],
+    teamName: string,
     slackToken: string | undefined,
     slackChannel: string | undefined,
     slackMessage: string | undefined,
 }
 
-const STATE_KV_STORE_NAME = 'PEOPLE-PAIRING';
-const HISTORY_KV_RECORD_KEY = 'PAIRING-HISTORY';
+const STATE_KV_STORE_NAME = 'PEOPLE-PAIRING-HISTORY';
+const DEFAULT_KV_RECORD_KEY = 'My best team';
 
 Apify.main(async () => {
     const {
         names,
+        teamName = DEFAULT_KV_RECORD_KEY,
         slackToken,
         slackChannel,
         slackMessage = `Chosen pairs are:`,
@@ -29,8 +31,10 @@ Apify.main(async () => {
         }
     }
 
+    const teamNameSanitized = teamName.replace(/[^A-Za-Z0-9.-]/g, '-')
+
     const stateStore = await Apify.openKeyValueStore(STATE_KV_STORE_NAME);
-    let historyState = (await stateStore.getValue(HISTORY_KV_RECORD_KEY) || {}) as HistoryState;
+    let historyState = (await stateStore.getValue(teamNameSanitized) || {}) as HistoryState;
     let allHistoryPairs = Object.values(historyState).flat(1);
 
     const namesAssigned = {} as Record<string, boolean>;
@@ -91,7 +95,7 @@ Apify.main(async () => {
 
     const date = new Date().toISOString();
     historyState[date] = chosenPairs;
-    await stateStore.setValue(HISTORY_KV_RECORD_KEY, historyState);
+    await stateStore.setValue(teamNameSanitized, historyState);
 
     if (slackToken) {
         const fullMessage = `*${slackMessage}*\n`

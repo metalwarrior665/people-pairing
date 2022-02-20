@@ -9,6 +9,13 @@
             "description": "List of names from which you want to create pairs.",
             "editor": "stringList"
         },
+        "teamName": {
+            "title": "Team name",
+            "type": "string",
+            "description": "Name of your team. Used as a record where the historical pairs are stored. Important if you want to track history of more teams.",
+            "editor": "textfield",
+            "prefill": "My best team"
+        },
         "slackToken": {
             "title": "Slack Token",
             "type": "string",
