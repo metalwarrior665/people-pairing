@@ -31,7 +31,7 @@ Apify.main(async () => {
         }
     }
 
-    const teamNameSanitized = teamName.replace(/[^A-Za-Z0-9.-]/g, '-')
+    const teamNameSanitized = teamName.replace(/[^A-Za-z0-9.-]/g, '-')
 
     const stateStore = await Apify.openKeyValueStore(STATE_KV_STORE_NAME);
     let historyState = (await stateStore.getValue(teamNameSanitized) || {}) as HistoryState;
