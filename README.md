@@ -14,3 +14,6 @@ Simple program to generate pairs from a list of people. Useful to set up automat
 5. The historical pairs are stored in Key-Value Store called `PEOPLE-PAIRING` with record `PAIRING-HISTORY`
 6. You can delete this record to start fresh pairing (but it does it automatically once all pairs were created)
 
+Slack message can look like this:
+![image info](./example.png)
+
