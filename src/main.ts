@@ -70,7 +70,7 @@ Apify.main(async () => {
         }
         // Now we can be in 3 states
         // 1. All names are assigned, great, we are done
-        // 2. One person is left out as even, well good luck to him/her next time
+        // 2. One person is left out as odd, well good luck to him/her next time
         // 3. Two or more people are not assigned, we need to restart history and loop again
 
         const nonAssignedCount = Object.values(namesAssigned)
@@ -89,9 +89,9 @@ Apify.main(async () => {
     log.info(`Chosen pairs are:`);
     console.dir(chosenPairs);
 
-    const evenLeftOutName = Object.entries(namesAssigned)
+    const oddLeftOutName = Object.entries(namesAssigned)
         .find(([, assigned]) => !assigned)?.[0] || 'none';
-    log.info(`Left out because even: ${evenLeftOutName}`);
+    log.info(`Left out because odd: ${oddLeftOutName}`);
 
     const date = new Date().toISOString();
     historyState[date] = chosenPairs;
@@ -100,7 +100,7 @@ Apify.main(async () => {
     if (slackToken) {
         const fullMessage = `*${slackMessage}*\n`
             + `${chosenPairs.map(([name1, name2]) => `${name1} + ${name2}`).join('\n')}\n`
-            + `Left out as even (Good luck next time): ${evenLeftOutName}`;
+            + `Left out as odd (Good luck next time): ${oddLeftOutName}`;
 
         const slackInput = {
             text: fullMessage,
