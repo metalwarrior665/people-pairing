@@ -94,7 +94,7 @@ Apify.main(async () => {
     await stateStore.setValue(HISTORY_KV_RECORD_KEY, historyState);
 
     if (slackToken) {
-        const fullMessage = `${slackMessage}\n`
+        const fullMessage = `*${slackMessage}*\n`
             + `${chosenPairs.map(([name1, name2]) => `${name1} + ${name2}`).join('\n')}\n`
             + `Left out as even (Good luck next time): ${evenLeftOutName}`;
 
