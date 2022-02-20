@@ -1,14 +1,34 @@
 {
-  "title": "Input schema for the hello_word actor.",
-  "type": "object",
-  "schemaVersion": 1,
-  "properties": {
-    "message": {
-      "title": "Message",
-      "type": "string",
-      "description": "Just enter your hello world message.",
-      "editor": "textfield"
-    }
-  },
-  "required": []
+    "title": "Input schema for the hello_word actor.",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "names": {
+            "title": "Names",
+            "type": "array",
+            "description": "List of names from which you want to create pairs.",
+            "editor": "stringList"
+        },
+        "slackToken": {
+            "title": "Slack Token",
+            "type": "string",
+            "description": "Access token to your Slack app.",
+            "editor": "textfield",
+            "sectionCaption": "Slack Configuration (optional)"
+        },
+        "slackChannel": {
+            "title": "Slack Channel",
+            "type": "string",
+            "description": "Slack Channel where the resulting pairs will be posted.",
+            "editor": "textfield"
+        },
+        "slackMessage": {
+            "title": "Slack Message",
+            "type": "string",
+            "description": "Optional message to introduce the created pairs.",
+            "prefill": "Chosen pairs are:",
+            "editor": "textfield"
+        }
+    },
+    "required": []
 }
