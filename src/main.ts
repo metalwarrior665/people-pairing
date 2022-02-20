@@ -86,7 +86,7 @@ Apify.main(async () => {
     console.dir(chosenPairs);
 
     const evenLeftOutName = Object.entries(namesAssigned)
-        .find(([name, assigned]) => !assigned)?.[0] || 'none';
+        .find(([, assigned]) => !assigned)?.[0] || 'none';
     log.info(`Left out because even: ${evenLeftOutName}`);
 
     const date = new Date().toISOString();
