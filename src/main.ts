@@ -12,14 +12,20 @@ interface Input {
     slackChannel: string | undefined,
     slackMessage: string | undefined,
 }
+interface SkipCounter {
+    skipped: number
+}
 
 const STATE_KV_STORE_NAME = 'PEOPLE-PAIRING-HISTORY';
 const DEFAULT_KV_RECORD_KEY = 'My best team';
+const SKIP_RUN_COUNTER = 'SKIP-RUN-COUNTER';
 
 Apify.main(async () => {
     const {
         names,
         teamName = DEFAULT_KV_RECORD_KEY,
+        // This is to be able to run cron expressions like every 2 weeks
+        skipEveryTimes = 0,
         slackToken,
         slackChannel,
         slackMessage = `Chosen pairs are:`,
@@ -34,6 +40,24 @@ Apify.main(async () => {
     const teamNameSanitized = teamName.replace(/[^A-Za-z0-9.-]/g, '-')
 
     const stateStore = await Apify.openKeyValueStore(STATE_KV_STORE_NAME);
+
+    // Skipping logic to work around limits of cron expressions
+    const skipState = (await stateStore.getValue('SKIP_RUN_COUNTER') || { skipped: 0 }) as SkipCounter;
+    let willAbort = false;
+    if (skipState.skipped >= skipEveryTimes) {
+        willAbort = true;
+        skipState.skipped = 0;
+    } else {
+        skipState.skipped++;
+    }
+
+    await stateStore.setValue('SKIP_RUN_COUNTER', skipState);
+
+    if (willAbort) {
+        log.warning(`Skipping actor because we are running for the ${skipState.skipped} time after the last skip reset`);
+        return;
+    }
+
     let historyState = (await stateStore.getValue(teamNameSanitized) || {}) as HistoryState;
     let allHistoryPairs = Object.values(historyState).flat(1);
 
