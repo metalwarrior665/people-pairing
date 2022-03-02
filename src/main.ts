@@ -7,6 +7,7 @@ export type Pair = [string, string];
 type HistoryState = Record<string, Pair[]>
 interface Input {
     names: string[],
+    skipEveryTimes: number,
     teamName: string,
     slackToken: string | undefined,
     slackChannel: string | undefined,
@@ -42,7 +43,7 @@ Apify.main(async () => {
     const stateStore = await Apify.openKeyValueStore(STATE_KV_STORE_NAME);
 
     // Skipping logic to work around limits of cron expressions
-    const skipState = (await stateStore.getValue('SKIP_RUN_COUNTER') || { skipped: 0 }) as SkipCounter;
+    const skipState = (await stateStore.getValue(SKIP_RUN_COUNTER) || { skipped: 0 }) as SkipCounter;
     let willAbort = false;
     if (skipState.skipped >= skipEveryTimes) {
         willAbort = true;
@@ -51,7 +52,7 @@ Apify.main(async () => {
         skipState.skipped++;
     }
 
-    await stateStore.setValue('SKIP_RUN_COUNTER', skipState);
+    await stateStore.setValue(SKIP_RUN_COUNTER, skipState);
 
     if (willAbort) {
         log.warning(`Skipping actor because we are running for the ${skipState.skipped} time after the last skip reset`);
