@@ -46,10 +46,10 @@ Apify.main(async () => {
     const skipState = (await stateStore.getValue(SKIP_RUN_COUNTER) || { skipped: 0 }) as SkipCounter;
     let willAbort = false;
     if (skipState.skipped >= skipEveryTimes) {
-        willAbort = true;
         skipState.skipped = 0;
     } else {
         skipState.skipped++;
+        willAbort = true;
     }
 
     await stateStore.setValue(SKIP_RUN_COUNTER, skipState);
