@@ -16,6 +16,12 @@
             "editor": "textfield",
             "prefill": "My best team"
         },
+        "skipEveryTimes": {
+            "title": "Skip every x runs",
+            "type": "integer",
+            "description": "To work around limits of cron expressions",
+            "prefill": 0
+        },
         "slackToken": {
             "title": "Slack Token",
             "type": "string",
