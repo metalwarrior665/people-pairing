@@ -7,6 +7,7 @@
             "title": "Names",
             "type": "array",
             "description": "List of names from which you want to create pairs.",
+            "prefill": ["Elon Musk", "Mark Zuckerberg", "Bill Gates", "Steve Jobs", "Jeff Bezos"],
             "editor": "stringList"
         },
         "teamName": {
